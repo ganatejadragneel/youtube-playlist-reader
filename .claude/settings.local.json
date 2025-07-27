@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(pip install:*)",
+      "Bash(python -m pytest tests/unit/test_settings.py -v)",
+      "Bash(python3 -m pytest tests/unit/test_settings.py -v)",
+      "Bash(python3 -m pip install:*)",
+      "Bash(python3:*)",
+      "Bash(source:*)",
+      "Bash(brew list:*)",
+      "Bash(rm:*)",
+      "Bash(python -m pytest tests/unit/test_youtube_adapter.py -v)",
+      "Bash(python -m pytest tests/ -v --tb=short)",
+      "Bash(python test:*)",
+      "Bash(python:*)",
+      "Bash(curl:*)",
+      "Bash(lsof:*)"
+    ],
+    "deny": []
+  }
+}

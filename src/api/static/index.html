@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Playlist Reader</title>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loading { display: none; }
+        .htmx-request .loading { display: inline; }
+        .htmx-request .not-loading { display: none; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">🎬 YouTube Playlist Reader</h1>
+            <p class="text-gray-600">AI-powered playlist analysis using local Ollama</p>
+            <div class="mt-4">
+                <button 
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                    hx-get="/api/health"
+                    hx-target="#health-status"
+                >
+                    Check Status
+                </button>
+            </div>
+            <div id="health-status" class="mt-2"></div>
+        </header>
+
+        <!-- Playlist Summary -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">📋 Playlist Summary</h2>
+            <button 
+                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+                hx-get="/api/summary"
+                hx-target="#summary-content"
+                hx-indicator="#summary-loading"
+            >
+                <span class="not-loading">Get Summary</span>
+                <span class="loading">Loading...</span>
+            </button>
+            <div id="summary-loading" class="loading mt-2">
+                <div class="flex items-center">
+                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500 mr-2"></div>
+                    <span class="text-gray-600">Analyzing playlist with AI...</span>
+                </div>
+            </div>
+            <div id="summary-content" class="mt-4"></div>
+        </section>
+
+        <!-- Q&A Section -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">🤖 Ask Questions</h2>
+            <form hx-post="/api/ask" hx-target="#qa-response" hx-indicator="#qa-loading">
+                <div class="mb-4">
+                    <label for="question" class="block text-gray-700 font-medium mb-2">Your Question:</label>
+                    <input 
+                        type="text" 
+                        id="question" 
+                        name="question" 
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="e.g., What kind of games do they play?"
+                        required
+                    >
+                </div>
+                <button 
+                    type="submit"
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg"
+                >
+                    <span class="not-loading">Ask Question</span>
+                    <span class="loading">Thinking...</span>
+                </button>
+            </form>
+            
+            <div id="qa-loading" class="loading mt-4">
+                <div class="flex items-center">
+                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500 mr-2"></div>
+                    <span class="text-gray-600">AI is analyzing the playlist...</span>
+                </div>
+            </div>
+            <div id="qa-response" class="mt-4"></div>
+
+            <!-- Quick Questions -->
+            <div class="mt-6">
+                <h3 class="text-lg font-semibold mb-3">Quick Questions:</h3>
+                <div class="flex flex-wrap gap-2">
+                    <button 
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded text-sm"
+                        onclick="document.getElementById('question').value = 'What kind of content is in this playlist?'"
+                    >
+                        What's the content?
+                    </button>
+                    <button 
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded text-sm"
+                        onclick="document.getElementById('question').value = 'How many videos are there?'"
+                    >
+                        How many videos?
+                    </button>
+                    <button 
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded text-sm"
+                        onclick="document.getElementById('question').value = 'Who are the main creators?'"
+                    >
+                        Who are the creators?
+                    </button>
+                    <button 
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded text-sm"
+                        onclick="document.getElementById('question').value = 'What can viewers expect?'"
+                    >
+                        What to expect?
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Search -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">🔍 Search Videos</h2>
+            <form hx-post="/api/search" hx-target="#search-results" hx-indicator="#search-loading">
+                <div class="mb-4">
+                    <label for="query" class="block text-gray-700 font-medium mb-2">Search for videos:</label>
+                    <input 
+                        type="text" 
+                        id="query" 
+                        name="query" 
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="e.g., among us, IQ, sus"
+                        required
+                    >
+                </div>
+                <button 
+                    type="submit"
+                    class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg"
+                >
+                    <span class="not-loading">Search Videos</span>
+                    <span class="loading">Searching...</span>
+                </button>
+            </form>
+            
+            <div id="search-loading" class="loading mt-4">
+                <div class="flex items-center">
+                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-500 mr-2"></div>
+                    <span class="text-gray-600">Searching videos...</span>
+                </div>
+            </div>
+            <div id="search-results" class="mt-4"></div>
+        </section>
+
+        <!-- Recent Videos -->
+        <section class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold mb-4">📺 Recent Videos</h2>
+            <button 
+                class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded"
+                hx-get="/api/playlist/videos?max_videos=10"
+                hx-target="#video-list"
+                hx-indicator="#video-loading"
+            >
+                <span class="not-loading">Load Videos</span>
+                <span class="loading">Loading...</span>
+            </button>
+            
+            <div id="video-loading" class="loading mt-4">
+                <div class="flex items-center">
+                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-indigo-500 mr-2"></div>
+                    <span class="text-gray-600">Loading videos...</span>
+                </div>
+            </div>
+            <div id="video-list" class="mt-4"></div>
+        </section>
+    </div>
+
+    <script>
+        // Handle responses
+        document.addEventListener('htmx:afterRequest', function(evt) {
+            if (evt.detail.successful) {
+                console.log('Request successful');
+            } else {
+                console.error('Request failed:', evt.detail.xhr.responseText);
+                evt.detail.target.innerHTML = '<div class="text-red-600 p-4 bg-red-50 rounded">Error: ' + 
+                    (evt.detail.xhr.status === 0 ? 'Server unavailable' : 'Request failed') + '</div>';
+            }
+        });
+    </script>
+</body>
+</html>
