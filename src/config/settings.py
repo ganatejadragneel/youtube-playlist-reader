@@ -11,8 +11,8 @@ class Settings(BaseSettings):
         case_sensitive=False,
     )
 
-    # YouTube Configuration
-    youtube_playlist_url: HttpUrl
+    # YouTube Configuration - can be either playlist or channel URL
+    youtube_url: HttpUrl  # Changed from youtube_playlist_url to support both
     youtube_api_key: Optional[str] = None
 
     # Ollama Configuration
@@ -34,13 +34,23 @@ class Settings(BaseSettings):
     def ensure_path(cls, v: str) -> Path:
         return Path(v)
 
-    @field_validator("youtube_playlist_url", mode="before")
+    @field_validator("youtube_url", mode="before")
     @classmethod
     def validate_youtube_url(cls, v: str) -> str:
         if not v or not isinstance(v, str):
-            raise ValueError("YouTube playlist URL is required")
-        if "playlist" not in v:
-            raise ValueError("URL must be a YouTube playlist URL")
+            raise ValueError("YouTube URL is required")
+        
+        # Accept both playlist and channel URLs
+        is_playlist = "playlist" in v or "list=" in v
+        is_channel = any(pattern in v for pattern in [
+            "youtube.com/channel/",
+            "youtube.com/c/",
+            "youtube.com/user/",
+            "youtube.com/@"
+        ])
+        
+        if not (is_playlist or is_channel):
+            raise ValueError("URL must be a YouTube playlist or channel URL")
         return v
 
     @model_validator(mode="after")

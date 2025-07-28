@@ -28,3 +28,19 @@ class Playlist:
     video_count: int
     published_at: datetime
     videos: List[Video] = None
+
+
+@dataclass(frozen=True)
+class Channel:
+    """Domain model for a YouTube channel."""
+
+    channel_id: str
+    title: str
+    description: str
+    subscriber_count: Optional[int] = None
+    video_count: Optional[int] = None
+    playlist_count: Optional[int] = None
+    published_at: Optional[datetime] = None
+    thumbnail_url: Optional[str] = None
+    custom_url: Optional[str] = None
+    playlists: Optional[List[Playlist]] = None

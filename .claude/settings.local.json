@@ -15,7 +15,10 @@
       "Bash(python test:*)",
       "Bash(python:*)",
       "Bash(curl:*)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Bash(grep:*)",
+      "Bash(/opt/homebrew/bin/python3 -m pytest tests/ -v)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }

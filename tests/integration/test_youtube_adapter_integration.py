@@ -19,7 +19,7 @@ class TestYouTubeAPIAdapterIntegration:
     @pytest.mark.asyncio
     async def test_real_playlist_fetch(self, adapter):
         """Test fetching the actual playlist from the configuration."""
-        playlist = await adapter.get_playlist(str(settings.youtube_playlist_url))
+        playlist = await adapter.get_playlist(str(settings.youtube_url))
         
         assert playlist.playlist_id
         assert playlist.title
@@ -29,7 +29,7 @@ class TestYouTubeAPIAdapterIntegration:
     async def test_real_playlist_videos_fetch(self, adapter):
         """Test fetching videos from the actual playlist."""
         videos = await adapter.get_playlist_videos(
-            str(settings.youtube_playlist_url), max_results=3
+            str(settings.youtube_url), max_results=3
         )
         
         assert len(videos) <= 3
@@ -41,7 +41,7 @@ class TestYouTubeAPIAdapterIntegration:
         """Test fetching transcript from a real video."""
         # First get a video from the playlist
         videos = await adapter.get_playlist_videos(
-            str(settings.youtube_playlist_url), max_results=1
+            str(settings.youtube_url), max_results=1
         )
         
         if videos:
@@ -62,7 +62,7 @@ class TestYouTubeAPIAdapterNoKey:
     @pytest.mark.asyncio
     async def test_playlist_without_key(self, adapter):
         """Test that adapter handles missing API key gracefully."""
-        playlist = await adapter.get_playlist(str(settings.youtube_playlist_url))
+        playlist = await adapter.get_playlist(str(settings.youtube_url))
         
         # Should return minimal data
         assert playlist.playlist_id

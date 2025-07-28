@@ -95,7 +95,7 @@ class TestYouTubeQAService:
 
     def test_build_context(self, qa_service, sample_playlist, sample_videos):
         """Test context building from playlist and videos."""
-        context = qa_service._build_context(sample_playlist, sample_videos)
+        context = qa_service._build_playlist_context(sample_playlist, sample_videos)
 
         assert "PLAYLIST INFORMATION:" in context
         assert sample_playlist.title in context
@@ -124,7 +124,7 @@ class TestYouTubeQAService:
             published_at=datetime.now()
         )
 
-        context = qa_service._build_context(playlist, [video])
+        context = qa_service._build_playlist_context(playlist, [video])
 
         # Should truncate long descriptions
         assert len([line for line in context.split('\n') if 'Description:' in line][0]) < 250
@@ -139,7 +139,7 @@ class TestYouTubeQAService:
         mock_youtube_repo.get_playlist_videos.return_value = sample_videos
         mock_llm_repo.generate_response.return_value = "Gaming playlist summary"
 
-        result = await qa_service.get_playlist_summary("https://youtube.com/playlist?list=PLtest123")
+        result = await qa_service.get_summary("https://youtube.com/playlist?list=PLtest123")
 
         assert isinstance(result, QAResponse)
         assert result.answer == "Gaming playlist summary"

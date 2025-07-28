@@ -16,7 +16,7 @@ def temp_dir():
 def mock_env_vars(temp_dir):
     """Mock environment variables for testing."""
     env_vars = {
-        "YOUTUBE_PLAYLIST_URL": "https://www.youtube.com/playlist?list=PLtest123",
+        "YOUTUBE_URL": "https://www.youtube.com/playlist?list=PLtest123",
         "YOUTUBE_API_KEY": "test_api_key",
         "OLLAMA_BASE_URL": "http://localhost:11434",
         "OLLAMA_MODEL": "llama3.2",
@@ -28,5 +28,6 @@ def mock_env_vars(temp_dir):
         "EMBEDDING_MODEL": "test-model",
     }
     
+    # Clear environment for tests
     with patch.dict(os.environ, env_vars, clear=True):
         yield env_vars
